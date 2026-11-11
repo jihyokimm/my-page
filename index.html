@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>기므지효의 숲속 프로필</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Canvas Confetti Library for Celebration Effect -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- Google Fonts (Noto Sans KR, Gaegu) -->
+  <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Noto+Sans+KR:wght@400;600;800&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      /* 싱그러운 숲속 느낌의 그라데이션 배경 */
+      background: linear-gradient(180deg, #2d5a27 0%, #1e3f20 50%, #0d230f 100%);
+      color: #ffffff;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .font-handwriting {
+      font-family: 'Gaegu', cursive;
+    }
+
+    /* 살랑살랑 떨어지는 나뭇잎 애니메이션 */
+    .leaf {
+      position: absolute;
+      top: -40px;
+      pointer-events: none;
+      animation: fall linear infinite;
+      user-select: none;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(0) rotate(0deg) translateX(0);
+        opacity: 0.9;
+      }
+      50% {
+        transform: translateY(50vh) rotate(180deg) translateX(25px);
+      }
+      100% {
+        transform: translateY(115vh) rotate(360deg) translateX(-25px);
+        opacity: 0.1;
+      }
+    }
+
+    /* 풀숲 통통 튀는 모션 */
+    .bounce-gentle {
+      animation: bounceGentle 3s ease-in-out infinite;
+    }
+
+    @keyframes bounceGentle {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    /* 카드 뒤집기 (3D Flip Effect) */
+    .perspective-1000 {
+      perspective: 1000px;
+    }
+    
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+      cursor: pointer;
+    }
+
+    .card-inner.is-flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      border-radius: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+    }
+
+    .card-back {
+      transform: rotateY(180deg);
+    }
+
+    /* 퀴즈 흔들림 애니메이션 (틀렸을 때) */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-10px); }
+      40%, 80% { transform: translateX(10px); }
+    }
+    .shake-animation {
+      animation: shake 0.5s ease-in-out;
+    }
+  </style>
+</head>
+<body class="flex flex-col items-center justify-between min-h-screen p-4 md:p-8">
+
+  <!-- 떨어지는 나뭇잎 레이어 -->
+  <div id="leaf-container" class="fixed inset-0 pointer-events-none z-0"></div>
+
+  <!-- 메인 컨텐츠 영역 -->
+  <main class="w-full max-w-3xl z-10 space-y-8 my-auto">
+
+    <!-- 프로필 헤더 -->
+    <header class="text-center bg-emerald-950/50 backdrop-blur-md p-6 rounded-3xl border-2 border-emerald-500/30 shadow-2xl relative overflow-hidden">
+      <div class="absolute -top-2 -left-2 text-3xl">🌿</div>
+      <div class="absolute -top-2 -right-2 text-3xl">🍄</div>
+      
+      <!-- 귀여운 동물 아이콘 모음 -->
+      <div class="flex justify-center items-center gap-3 text-4xl sm:text-5xl mb-2 bounce-gentle">
+        <span>🐿️</span>
+        <span class="text-3xl">🌳</span>
+        <span>🐰</span>
+        <span class="text-3xl">🌳</span>
+        <span>🐻</span>
+      </div>
+
+      <h1 class="text-3xl sm:text-5xl font-extrabold text-amber-200 mb-2 tracking-wide font-handwriting">
+        기므지효의 비밀 숲속 집 🛖
+      </h1>
+      <p class="text-emerald-200 text-sm sm:text-base font-medium">
+        도토리 모으듯 행복을 모으는 숲속 동물 친구들의 대장! 🌲✨
+      </p>
+    </header>
+
+    <!-- 좋아하는 것 3가지 (카드 뒤집기) -->
+    <section>
+      <h2 class="text-xl sm:text-2xl font-bold text-amber-100 mb-4 text-center flex items-center justify-center gap-2">
+        <span>🐿️</span> 내가 가장 좋아하는 것 3가지 <span class="text-xs font-normal text-emerald-300">(터치해서 뒤집기!)</span>
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        
+        <!-- 카드 1: 테니스 -->
+        <div class="h-56 perspective-1000">
+          <div class="card-inner shadow-xl" onclick="flipCard(this)">
+            <div class="card-front bg-gradient-to-br from-emerald-800 to-green-950 border-2 border-emerald-400/40 text-center">
+              <span class="text-5xl mb-3">🎾</span>
+              <h3 class="text-xl font-bold text-amber-200">테니스</h3>
+              <p class="text-xs text-emerald-300 mt-2 font-handwriting text-base">클릭해서 이유 확인하기!</p>
+            </div>
+            <div class="card-back bg-gradient-to-br from-amber-900 to-emerald-900 border-2 border-amber-400/50 text-center">
+              <p class="text-sm sm:text-base text-amber-100 font-medium leading-relaxed">
+                도토리 대신 테니스 공을 팡팡 칠 때 스트레스가 날아가요! 숲속 다람쥐들도 구경 온답니다! 🐿️🎾
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 카드 2: 피아노 -->
+        <div class="h-56 perspective-1000">
+          <div class="card-inner shadow-xl" onclick="flipCard(this)">
+            <div class="card-front bg-gradient-to-br from-emerald-800 to-green-950 border-2 border-emerald-400/40 text-center">
+              <span class="text-5xl mb-3">🎹</span>
+              <h3 class="text-xl font-bold text-amber-200">피아노</h3>
+              <p class="text-xs text-emerald-300 mt-2 font-handwriting text-base">클릭해서 이유 확인하기!</p>
+            </div>
+            <div class="card-back bg-gradient-to-br from-amber-900 to-emerald-900 border-2 border-amber-400/50 text-center">
+              <p class="text-sm sm:text-base text-amber-100 font-medium leading-relaxed">
+                건반을 누르면 숲속 새들이 맞춰 노래를 불러줘요! 제가 연주하면 곰도 춤춰요 🐻🎶
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 카드 3: 팝송 -->
+        <div class="h-56 perspective-1000">
+          <div class="card-inner shadow-xl" onclick="flipCard(this)">
+            <div class="card-front bg-gradient-to-br from-emerald-800 to-green-950 border-2 border-emerald-400/40 text-center">
+              <span class="text-5xl mb-3">🎧</span>
+              <h3 class="text-xl font-bold text-amber-200">팝송</h3>
+              <p class="text-xs text-emerald-300 mt-2 font-handwriting text-base">클릭해서 이유 확인하기!</p>
+            </div>
+            <div class="card-back bg-gradient-to-br from-amber-900 to-emerald-900 border-2 border-amber-400/50 text-center">
+              <p class="text-sm sm:text-base text-amber-100 font-medium leading-relaxed">
+                신나는 팝송 들으면서 숲길을 산책하면 토끼랑 함께 깡충깡충 리듬을 타게 돼요! 🐰🎧
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- OX 퀴즈 섹션 -->
+    <section class="bg-emerald-950/50 backdrop-blur-md p-6 rounded-3xl border-2 border-emerald-500/30 shadow-2xl text-center">
+      <h2 class="text-xl sm:text-2xl font-bold text-amber-100 mb-2">❓ 숲속 동물들의 OX 퀴즈</h2>
+      <p class="text-lg sm:text-xl font-bold text-emerald-200 my-4">
+        "나는 힙합을 좋아한다!"
+      </p>
+      
+      <div id="quiz-box" class="flex justify-center gap-6 my-4">
+        <button onclick="checkAnswer(true)" class="w-24 h-24 bg-emerald-600/40 hover:bg-emerald-500/60 border-2 border-emerald-300 text-emerald-100 text-3xl font-extrabold rounded-2xl transition active:scale-95 flex flex-col items-center justify-center gap-1 shadow-lg">
+          ⭕ <span class="text-lg">O</span>
+        </button>
+        <button onclick="checkAnswer(false)" class="w-24 h-24 bg-rose-600/40 hover:bg-rose-500/60 border-2 border-rose-400 text-rose-100 text-3xl font-extrabold rounded-2xl transition active:scale-95 flex flex-col items-center justify-center gap-1 shadow-lg">
+          ❌ <span class="text-lg">X</span>
+        </button>
+      </div>
+
+      <!-- 결과 메시지 표시 영역 -->
+      <div id="quiz-result" class="hidden mt-4 p-4 rounded-2xl font-bold text-base sm:text-lg transition-all"></div>
+    </section>
+
+    <!-- 랜덤 응원 한마디 섹션 -->
+    <section class="bg-emerald-950/50 backdrop-blur-md p-6 rounded-3xl border-2 border-emerald-500/30 shadow-2xl text-center">
+      <h2 class="text-xl sm:text-2xl font-bold text-amber-100 mb-2">🦉 숲속 지혜로운 부엉이의 응원 뽑기</h2>
+      <p class="text-xs sm:text-sm text-emerald-200 mb-5">버튼을 누르면 숲속 동물들이 응원 메시지를 전달해 드려요!</p>
+      
+      <button onclick="showRandomCheer()" class="px-6 py-3.5 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-emerald-950 font-extrabold text-base sm:text-lg rounded-full shadow-lg transform transition hover:-translate-y-0.5 active:translate-y-0 active:scale-95 border border-amber-200">
+        🌰 숲속 응원 한마디 뽑기 🌰
+      </button>
+
+      <div id="cheer-display" class="mt-6 min-h-[80px] flex items-center justify-center p-4 bg-emerald-900/60 rounded-2xl border border-emerald-400/30 text-amber-100 font-medium text-base sm:text-lg transition-all shadow-inner">
+        버튼을 눌러 오늘의 숲속 응원을 받아보세요! 🍃
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 푸터 -->
+  <footer class="w-full text-center text-xs text-emerald-300/60 mt-8 mb-2 z-10">
+    © 기므지효의 숲속 아지트 - Forest Friends 🦔
+  </footer>
+
+  <script>
+    // 1. 카드 뒤집기 함수
+    function flipCard(card) {
+      card.classList.toggle('is-flipped');
+    }
+
+    // 2. OX 퀴즈 처리 함수
+    function checkAnswer(userAnswer) {
+      const resultDiv = document.getElementById('quiz-result');
+      const quizBox = document.getElementById('quiz-box');
+      
+      resultDiv.classList.remove('hidden', 'bg-emerald-800/80', 'border-emerald-400', 'text-emerald-100', 'bg-rose-900/80', 'border-rose-400', 'text-rose-100');
+      quizBox.classList.remove('shake-animation');
+
+      if (userAnswer === true) { // 정답 (O)
+        resultDiv.className = "mt-4 p-4 rounded-2xl font-bold text-base sm:text-lg border-2 bg-emerald-800/80 border-emerald-400 text-emerald-100 animate-bounce";
+        resultDiv.innerHTML = "🎉 정답입니다! 힙합 비트에 맞춰 숲속 동물들과 다 같이 리듬을 타요! Yo! 😎🦊";
+        
+        // 꽃가루/나뭇잎 축하 효과 (Confetti)
+        if (typeof confetti === 'function') {
+          confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ['#4ade80', '#facc15', '#a3e635', '#f59e0b']
+          });
+        }
+      } else { // 오답 (X)
+        // 리플로우 강제 후 진동 애니메이션 적용
+        void quizBox.offsetWidth;
+        quizBox.classList.add('shake-animation');
+        
+        resultDiv.className = "mt-4 p-4 rounded-2xl font-bold text-base sm:text-lg border-2 bg-rose-900/80 border-rose-400 text-rose-100";
+        resultDiv.innerHTML = "😭 아쉬워요! 틀렸습니다. 저는 사실 숲속을 힙하게 만들어주는 힙합을 정말 좋아해요! 🎤";
+      }
+    }
+
+    // 3. 랜덤 응원 한마디 (11개)
+    const cheerMessages = [
+      "🐿️ 다람쥐가 전해요: 오늘 모은 소소한 기쁨들이 큰 행복 도토리가 될 거예요!",
+      "🐻 곰의 따뜻한 안아주기! 오늘 하루 지쳤다면 잠시 쉬어가도 괜찮아요.",
+      "🐰 토끼처럼 깡충깡충! 당신의 오늘 하루는 신나는 일로 가득할 거예요!",
+      "🎾 테니스 공처럼 어떤 어려움이 와도 통통 신나게 튕겨내 버리세요!",
+      "🎹 아침 새소리 피아노 연주처럼 당신의 오늘이 아름답게 흐르길 바랄게요!",
+      "🎧 팝송의 신나는 비트처럼 오늘 마음속에 기분 좋은 리듬이 가득하길!",
+      "🦉 부엉이의 지혜 한 조각: 당신은 생각보다 훨씬 더 멋지고 잘해내고 있어요!",
+      "🦔 고슴도치의 따스한 응원! 조금 천천히 가도 괜찮아요. 항상 응원할게요!",
+      "🍄 숲속 행운 버섯 발견! 오늘 당신에게 엄청난 행운이 찾아올 거예요!",
+      "🌱 따뜻한 햇살 아래 싹트는 새싹처럼 당신의 가능성도 무한히 피어납니다!",
+      "💖 기므지효와 숲속 동물들이 전하는 비타민! 오늘 하루 웃을 일만 가득하세요!"
+    ];
+
+    function showRandomCheer() {
+      const display = document.getElementById('cheer-display');
+      const randomIndex = Math.floor(Math.random() * cheerMessages.length);
+      
+      // 페이드 애니메이션 효과
+      display.style.opacity = '0';
+      setTimeout(() => {
+        display.innerText = cheerMessages[randomIndex];
+        display.style.opacity = '1';
+      }, 150);
+    }
+
+    // 4. 떨어지는 나뭇잎 생성 함수
+    function createLeaves() {
+      const container = document.getElementById('leaf-container');
+      const leafTypes = ['🍃', '🌿', '🍂', '🍁', '🌱'];
+      const leafCount = 15;
+
+      for (let i = 0; i < leafCount; i++) {
+        const leaf = document.createElement('div');
+        leaf.classList.add('leaf');
+        
+        // 랜덤 설정
+        const randomLeaf = leafTypes[Math.floor(Math.random() * leafTypes.length)];
+        const left = Math.random() * 100; // 0% ~ 100%
+        const size = Math.random() * 1.2 + 0.8; // 0.8rem ~ 2rem
+        const duration = Math.random() * 7 + 8; // 8s ~ 15s
+        const delay = Math.random() * 5; // 0s ~ 5s
+
+        leaf.innerText = randomLeaf;
+        leaf.style.fontSize = `${size}rem`;
+        leaf.style.left = `${left}%`;
+        leaf.style.animationDuration = `${duration}s`;
+        leaf.style.animationDelay = `${delay}s`;
+
+        container.appendChild(leaf);
+      }
+    }
+
+    // 페이지 로드 시 나뭇잎 생성 실행
+    window.onload = function() {
+      createLeaves();
+    };
+  </script>
+</body>
+</html>
